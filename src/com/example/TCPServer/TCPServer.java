@@ -1,11 +1,10 @@
 package com.example.TCPServer;
 
 import javax.imageio.ImageIO;
-import javax.xml.crypto.Data;
 import java.awt.image.BufferedImage;
-import java.net.*;
 import java.io.*;
-import java.util.Arrays;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 public class TCPServer {
 
@@ -47,15 +46,28 @@ public class TCPServer {
             ByteArrayInputStream bis = new ByteArrayInputStream(data);
             BufferedImage bImage = ImageIO.read(bis);
             ImageIO.write(bImage, "jpg", new File("/home/erjseals/darknet/data/output.jpg"));
-            System.out.println("image created!");
+            System.out.println("Image created!");
 
-            Runtime rt = Runtime.getRuntime();
-            Process pr = rt.exec("/home/erjseals/darknet/./darknet detect cfg/yolov3.cfg yolov3.weights data/output.jpg");
+//            String[] argumentsForYOLO = new String[]{ "/home/erjseals/darknet/./darknet detect cfg/yolov3.cfg yolov3.weights data/output.jpg"};
+            ProcessBuilder processBuilder = new ProcessBuilder("./darknet", "detect", "cfg/yolov3.cfg", "yolov3.weights", "data/output.jpg");
+            processBuilder.directory(new File("/home/erjseals/darknet/"));
+
+            System.out.println("Processing Image!");
+
+            try {
+                Process process = processBuilder.start();
+                int errCode = process.waitFor();
+                System.out.println("Echo command executed, any errors? " + (errCode == 0 ? "No" : "Yes"));
+            }catch (Exception e){
+                System.out.println("in processBuilder.start()");
+                System.out.println(e);
+            }
 
             in.close();
             out.close();
             socket.close();
         }catch (Exception e) {
+            System.out.println("general error!");
             System.out.println(e);
         }
     }
