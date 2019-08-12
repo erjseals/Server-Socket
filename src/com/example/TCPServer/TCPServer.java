@@ -18,7 +18,6 @@ public class TCPServer {
         OutputStream out = null;
         int length;
         byte[] data;
-
         while(true) {
             try {
                 server = new ServerSocket(8080);
@@ -81,18 +80,35 @@ public class TCPServer {
                 //Need to get the image and extract a bytearray
 
                 bImage = ImageIO.read(new File("/home/erjseals/darknet/predictions.jpg"));
+
+                System.out.println("Test 1");
+
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+                System.out.println("Test 2");
+
                 ImageIO.write(bImage, "jpg", bos);
+
+                System.out.println("Test 3");
+
                 byte[] data2 = bos.toByteArray();
 
+                System.out.println("Test 4");
+
                 length = data2.length;
+
+                System.out.println("Length of Array: " + length);
 
                 dos.writeInt(length);
                 dos.write(data2, 0, length);
 
+                System.out.println("Test 5");
+
                 socket.getOutputStream().close();
                 dos.close();
                 socket.close();
+
+
 
             } catch (Exception e) {
                 System.out.println("general error!");
