@@ -62,10 +62,25 @@ public class TCPServer {
                 System.out.println("in processBuilder.start()");
                 System.out.println(e);
             }
-
             in.close();
             out.close();
             socket.close();
+
+            //Now we try to send back!
+            socket = new Socket("192.168.108.119", 8080);
+            if(socket.isConnected()){
+                System.out.println("Socket is connected!");
+            }
+            in = new DataInputStream(socket.getInputStream());
+            out = new DataOutputStream(socket.getOutputStream());
+
+            //Need to get the image and extract a bytearray
+
+
+
+
+
+
         }catch (Exception e) {
             System.out.println("general error!");
             System.out.println(e);
