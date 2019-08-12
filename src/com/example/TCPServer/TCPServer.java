@@ -67,7 +67,7 @@ public class TCPServer {
             socket.close();
 
             //Now we try to send back!
-            socket = new Socket("192.168.108.119", 8080);
+            socket = new Socket("192.168.52.207", 8080);
             if(socket.isConnected()){
                 System.out.println("Socket is connected!");
             }
@@ -75,11 +75,16 @@ public class TCPServer {
             out = new DataOutputStream(socket.getOutputStream());
 
             //Need to get the image and extract a bytearray
+            bImage = ImageIO.read(new File("/home/erjseals/darknet/predictions.jpg"));
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ImageIO.write(bImage, "jpg", bos);
+            byte [] data2 = bos.toByteArray();
 
+            out.write(data2, 0, data2.length);
 
-
-
-
+            out.close();
+            in.close();
+            socket.close();
 
         }catch (Exception e) {
             System.out.println("general error!");
