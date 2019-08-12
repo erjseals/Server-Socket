@@ -12,6 +12,7 @@ public class TCPServer {
 
         //initialize socket and input stream
         Socket		 socket = null;
+        Socket       socket2 = null;
         ServerSocket server = null;
         DataInputStream in	 = null;
         OutputStream out = null;
@@ -30,8 +31,6 @@ public class TCPServer {
 
             // takes input from the client socket
             in = new DataInputStream(socket.getInputStream());
-            //writes on client socket
-            out = new DataOutputStream(socket.getOutputStream());
 
             // Receiving data from client
             length = in.readInt();
@@ -62,28 +61,40 @@ public class TCPServer {
                 System.out.println("in processBuilder.start()");
                 System.out.println(e);
             }
+
             in.close();
-            out.close();
             socket.close();
 
+            File tempFile = new File("/home/erjseals/darknet/predictions.jpg");
+            boolean exists = tempFile.exists();
+            System.out.println("File exists: " + exists);
+
             //Now we try to send back!
-            socket = new Socket("192.168.52.207", 8080);
+            socket2 = new Socket("192.168.21.99", 8080);
             if(socket.isConnected()){
                 System.out.println("Socket is connected!");
             }
-            in = new DataInputStream(socket.getInputStream());
-            out = new DataOutputStream(socket.getOutputStream());
+
+            DataOutputStream dos = new DataOutputStream(socket2.getOutputStream());
 
             //Need to get the image and extract a bytearray
+
             bImage = ImageIO.read(new File("/home/erjseals/darknet/predictions.jpg"));
+                System.out.println("Test 1");
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                System.out.println("Test 2");
             ImageIO.write(bImage, "jpg", bos);
+                System.out.println("Test 3");
             byte [] data2 = bos.toByteArray();
+            System.out.println("Test 4");
 
-            out.write(data2, 0, data2.length);
+            System.out.println("Length of Array: " + data2.length);
 
-            out.close();
-            in.close();
+            dos.write(data2.length);
+            dos.write(data2, 0, data2.length);
+                System.out.println("Test 5");
+
+            dos.close();
             socket.close();
 
         }catch (Exception e) {
