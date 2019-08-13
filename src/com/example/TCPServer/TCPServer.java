@@ -70,7 +70,7 @@ public class TCPServer {
                 System.out.println("File exists: " + exists);
 
                 //Now we try to send back!
-                socket2 = new Socket("192.168.21.99", 8080);
+                socket2 = new Socket("10.104.147.206", 8080);
                 if (socket.isConnected()) {
                     System.out.println("Socket is connected!");
                 }
