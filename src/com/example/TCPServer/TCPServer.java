@@ -16,11 +16,22 @@ public class TCPServer {
         ServerSocket server = null;
         DataInputStream in	 = null;
         OutputStream out = null;
+
+        //socket ip and port
+        String phoneAddress = "192.168.108.118";
+        int portNum = 8000;
+
+        //general strings for file location
+        String receivedImagePath = "/home/erjseals/darknet/data/output.jpg";
+        String[] darknetArgArr = {"./darknet", "detect", "cfg/yolov3.cfg", "yolov3.weights", "data/output.jpg"};
+        String darknetPath = "/home/erjseals/darknet/";
+        String processedImagePath = "/home/erjseals/darknet/predictions.jpg";
+
         int length;
         byte[] data;
         while(true) {
             try {
-                server = new ServerSocket(8080);
+                server = new ServerSocket(portNum);
                 System.out.println("Server started");
 
                 System.out.println("Waiting for a client ...");
@@ -44,12 +55,11 @@ public class TCPServer {
 
                 ByteArrayInputStream bis = new ByteArrayInputStream(data);
                 BufferedImage bImage = ImageIO.read(bis);
-                ImageIO.write(bImage, "jpg", new File("/home/erjseals/darknet/data/output.jpg"));
+                ImageIO.write(bImage, "jpg", new File(receivedImagePath));
                 System.out.println("Image created!");
 
-//            String[] argumentsForYOLO = new String[]{ "/home/erjseals/darknet/./darknet detect cfg/yolov3.cfg yolov3.weights data/output.jpg"};
-                ProcessBuilder processBuilder = new ProcessBuilder("./darknet", "detect", "cfg/yolov3.cfg", "yolov3.weights", "data/output.jpg");
-                processBuilder.directory(new File("/home/erjseals/darknet/"));
+                ProcessBuilder processBuilder = new ProcessBuilder(darknetArgArr[0], darknetArgArr[1], darknetArgArr[2], darknetArgArr[3], darknetArgArr[4]);
+                processBuilder.directory(new File(darknetPath));
 
                 System.out.println("Processing Image!");
 
@@ -65,12 +75,12 @@ public class TCPServer {
                 in.close();
                 socket.close();
 
-                File tempFile = new File("/home/erjseals/darknet/predictions.jpg");
+                File tempFile = new File(processedImagePath);
                 boolean exists = tempFile.exists();
                 System.out.println("File exists: " + exists);
 
                 //Now we try to send back!
-                socket2 = new Socket("192.168.108.118", 8080);
+                socket2 = new Socket(phoneAddress, portNum);
                 if (socket.isConnected()) {
                     System.out.println("Socket is connected!");
                 }
@@ -79,7 +89,7 @@ public class TCPServer {
 
                 //Need to get the image and extract a bytearray
 
-                bImage = ImageIO.read(new File("/home/erjseals/darknet/predictions.jpg"));
+                bImage = ImageIO.read(new File(processedImagePath));
 
                 System.out.println("Test 1");
 
