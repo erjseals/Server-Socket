@@ -3,8 +3,10 @@ package com.example.TCPServer;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URL;
 
 public class TCPServer {
 
@@ -20,8 +22,8 @@ public class TCPServer {
         ByteArrayOutputStream bos = null;
 
         //socket ip and port
-        String phoneAddress = "192.168.108.118";
-        int portNum = 8000;
+        String phoneAddress = "10.1.10.44";
+        int portNum = 8080;
 
         //general strings for file location
         String receivedImagePath = "/home/erjseals/darknet/data/output.jpg";
@@ -37,11 +39,13 @@ public class TCPServer {
                 try {
                     server = new ServerSocket(portNum);
 
+
                     System.out.println("Server started");
                     System.out.println("Waiting for a client ...");
 
                     socket = server.accept();
                     System.out.println("Client accepted");
+                    System.out.println("Client Address: " + socket.getRemoteSocketAddress().toString().replace("/", ""));
                 } catch (Exception e) {
                     System.out.println("Error accepting Client: " + e);
                     System.out.println("Line number: " + e.getStackTrace()[0].getLineNumber());
